@@ -7,6 +7,8 @@
         mc:Ignorable="d"
         xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
         Title="MainWindow" Height="350" Width="525">
+    <Controls:MetroWindow.Resources>
+    </Controls:MetroWindow.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>
@@ -18,18 +20,32 @@
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="0" Grid.ColumnSpan="2" Orientation="Horizontal">
-            <Button Content="Add Customer" Command="{Binding AddCustomer}"/>
-            <Button Content="Delete Customer" Command="{Binding AddCustomer}"/>
+            <Button Content="Add Customer" Command="{Binding AddCommand}"/>
+            <Button Content="Save Changes" Command="{Binding SaveCommand}"/>
         </StackPanel>
 
         <ListBox Grid.Row="1" Grid.Column="0" ItemsSource="{Binding Customers}"
-                 DisplayMemberPath="Name">
+                 DisplayMemberPath="FirstName">
             
         </ListBox>
 
-        <StackPanel Grid.Row="1" Grid.Column="1">
-            
-        </StackPanel>
+            <Grid Grid.Row="1" Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <!--<ColumnDefinition Width="*"/>-->
+            </Grid.ColumnDefinitions>
+                
+            <StackPanel Grid.Row="0" Orientation="Horizontal">
+                <TextBlock Text="First Name"/>
+                <TextBox Text="{Binding Customer.FirstName, UpdateSourceTrigger=PropertyChanged}" Width="150"/>
+            </StackPanel>
+        </Grid>
         
     </Grid>
 </Controls:MetroWindow>
