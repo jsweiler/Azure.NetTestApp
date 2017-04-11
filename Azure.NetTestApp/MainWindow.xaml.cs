@@ -21,11 +21,18 @@ namespace Azure.NetTestApp
     /// </summary>
     public partial class MainWindow : MetroWindow
     {
-        
+        private readonly MainViewModel viewModel = new MainViewModel();
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = new MainViewModel();
+            DataContext = viewModel;
+
+            Loaded += MainWindow_Loaded;
+        }
+
+        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            viewModel.Load();
         }
     }
 }

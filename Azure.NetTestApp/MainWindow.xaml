@@ -6,8 +6,20 @@
         xmlns:local="clr-namespace:Azure.NetTestApp"
         mc:Ignorable="d"
         xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
-        Title="MainWindow" Height="350" Width="525">
+        Title="Customer Entry" Height="450" Width="650"
+                      BorderThickness="1"
+                      BorderBrush="Black">
     <Controls:MetroWindow.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="Margin" Value="10,5,0,5"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="FontSize" Value="14"/>
+        </Style>
+
+        <Style TargetType="TextBox">
+            <Setter Property="Margin" Value="0,5,10,5"/>
+            <Setter Property="FontSize" Value="16"/>
+        </Style>
     </Controls:MetroWindow.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -20,12 +32,15 @@
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="0" Grid.ColumnSpan="2" Orientation="Horizontal">
-            <Button Content="Add Customer" Command="{Binding AddCommand}"/>
-            <Button Content="Save Changes" Command="{Binding SaveCommand}"/>
+            <Button Content="Add Customer" Command="{Binding AddCommand}"
+                    Margin="10,5,5,10"/>
+            <Button Content="Save Changes" Command="{Binding SaveCommand}"
+                    Margin="0,5,5,10"/>
         </StackPanel>
 
         <ListBox Grid.Row="1" Grid.Column="0" ItemsSource="{Binding Customers}"
-                 DisplayMemberPath="FirstName">
+                 DisplayMemberPath="FirstName"
+                 SelectedItem="{Binding Customer}">
             
         </ListBox>
 
@@ -37,14 +52,22 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <!--<ColumnDefinition Width="*"/>-->
+                <ColumnDefinition Width="105"/>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
                 
-            <StackPanel Grid.Row="0" Orientation="Horizontal">
-                <TextBlock Text="First Name"/>
-                <TextBox Text="{Binding Customer.FirstName, UpdateSourceTrigger=PropertyChanged}" Width="150"/>
-            </StackPanel>
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="First Name"/>
+            <TextBox Grid.Row="0" Grid.Column="1" 
+                     Text="{Binding Customer.FirstName, UpdateSourceTrigger=PropertyChanged}"/>
+
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="Last Name"/>
+            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Customer.LastName, UpdateSourceTrigger=PropertyChanged}"/>
+
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="Email"/>
+            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Customer.EmailAddress, UpdateSourceTrigger=PropertyChanged}"/>
+
+            <TextBlock Grid.Row="3" Grid.Column="0" Text="Phone Number"/>
+            <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Customer.PhoneNumber, UpdateSourceTrigger=PropertyChanged}"/>
         </Grid>
         
     </Grid>

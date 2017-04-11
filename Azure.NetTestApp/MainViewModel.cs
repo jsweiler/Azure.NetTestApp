@@ -63,19 +63,7 @@ namespace Azure.NetTestApp
 
         public async Task Save()
         {
-            var batchOperation = new TableBatchOperation();
-            foreach(var item in Customers.Where(c => c.RowKey == Guid.Empty))
-            {
-                var customer = new CustomerEntity(item.LastName);
-                customer.FirstName = item.FirstName;
-                customer.EmailAddress = item.EmailAddress;
-                customer.PhoneNumber = item.PhoneNumber;
-                batchOperation.Insert(customer);
-                item.RowKey = Guid.Parse(customer.RowKey);
-            }
-            await customersTable.ExecuteBatchAsync(batchOperation);
-
-            foreach(var item in Customers.Where(c => c.RowKey != Guid.Empty))
+            foreach (var item in Customers.Where(c => c.RowKey != Guid.Empty))
             {
                 var entity = TableCustomers.FirstOrDefault(c => c.PartitionKey == item.LastName && c.RowKey == item.RowKey.ToString());
                 entity.FirstName = item.FirstName;
@@ -85,14 +73,48 @@ namespace Azure.NetTestApp
                 var update = TableOperation.Replace(entity);
                 await customersTable.ExecuteAsync(update);
             }
+
+
+            var batchOperation = new TableBatchOperation();
+            foreach (var item in Customers.Where(c => c.RowKey == Guid.Empty))
+            {
+                var customer = new CustomerEntity(item.LastName);
+                customer.FirstName = item.FirstName;
+                customer.EmailAddress = item.EmailAddress;
+                customer.PhoneNumber = item.PhoneNumber;
+                batchOperation.Insert(customer);
+                item.RowKey = Guid.Parse(customer.RowKey);
+            }
+            if (batchOperation.Any())
+            {
+                await customersTable.ExecuteBatchAsync(batchOperation);
+            }
             
         }
 
-        public async Task LoadAsync()
+        public void Load()
         {
             var query = new TableQuery<CustomerEntity>();
             var results = customersTable.ExecuteQuery(query);
             TableCustomers = new List<CustomerEntity>(results);
+
+
+            foreach(var item in TableCustomers)
+            {
+                Customers.Add(new Customer
+                {
+                    EmailAddress = item.EmailAddress,
+                    FirstName = item.FirstName,
+                    LastName = item.PartitionKey,
+                    PhoneNumber = item.PhoneNumber,
+                    RowKey = Guid.Parse(item.RowKey)
+                });
+            }
+
+            if(Customers.Any())
+            {
+                Customer = Customers.FirstOrDefault();
+            }
         }
 
         public List<CustomerEntity> TableCustomers { get; set; }
