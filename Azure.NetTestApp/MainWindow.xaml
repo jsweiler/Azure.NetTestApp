@@ -28,6 +28,7 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
@@ -36,15 +37,37 @@
                     Margin="10,5,5,10"/>
             <Button Content="Save Changes" Command="{Binding SaveCommand}"
                     Margin="0,5,5,10"/>
+            <Button Content="Delete Customer" Command="{Binding DeleteCommand}"
+                    Margin="0,5,5,10"/>
         </StackPanel>
 
-        <ListBox Grid.Row="1" Grid.Column="0" ItemsSource="{Binding Customers}"
+        <TextBlock Grid.Row="1" Text="{Binding Message}"
+                   Grid.ColumnSpan="2"
+                   FontSize="16"
+                   Foreground="Red"
+                   Margin="10">
+            <TextBlock.Style>
+                <Style TargetType="TextBlock">
+                    <Style.Triggers>
+                        <Trigger Property="Text" Value="">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                        </Trigger>
+                        <Trigger Property="Text" Value="{x:Null}">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
+
+        <ListBox Grid.Row="2" Grid.Column="0" ItemsSource="{Binding Customers}"
                  DisplayMemberPath="FirstName"
-                 SelectedItem="{Binding Customer}">
+                 SelectedItem="{Binding Customer}"
+                 Margin="10,0,10,0">
             
         </ListBox>
 
-            <Grid Grid.Row="1" Grid.Column="1">
+            <Grid Grid.Row="3" Grid.Column="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
