@@ -49,6 +49,7 @@ namespace Azure.NetTestApp
             var customer = new Customer();
             Customers.Add(customer);
             Customer = customer;
+            Message = "";
         }
 
         private ICommand saveCommand;
@@ -63,7 +64,6 @@ namespace Azure.NetTestApp
                         try
                         {
                             await SaveAsync();
-                            Message = "";
                         }
                         catch (Exception e)
                         {
@@ -85,7 +85,7 @@ namespace Azure.NetTestApp
             }
             if (string.IsNullOrWhiteSpace(Customer.FirstName))
             {
-                Message = "You must enter a last name.";
+                Message = "You must enter a first name.";
                 return false;
             }
             return true;
@@ -121,7 +121,7 @@ namespace Azure.NetTestApp
             {
                 await customersTable.ExecuteBatchAsync(batchOperation);
             }
-            
+            Message = "";
         }
 
         private ICommand deleteCommand;
@@ -131,7 +131,10 @@ namespace Azure.NetTestApp
             {
                 if(deleteCommand == null)
                 {
-                    deleteCommand = new RelayCommand(async ex => await DeleteAsync());
+                    deleteCommand = new RelayCommand(async ex =>
+                    {
+                        await DeleteAsync();
+                    });
                 }
                 return deleteCommand;
             }
@@ -145,6 +148,12 @@ namespace Azure.NetTestApp
                 return;
             }
             var entity = TableCustomers.FirstOrDefault(c => c.RowKey == Customer.RowKey.ToString());
+            if(entity == null)
+            {
+                Customers.Remove(Customer);
+                Message = "";
+                return;
+            }
             var deleteOperation = TableOperation.Delete(entity);
             await customersTable.ExecuteAsync(deleteOperation);
 
